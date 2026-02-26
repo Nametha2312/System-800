@@ -199,6 +199,7 @@ export interface RetailerCredential extends Identifiable, Timestamps {
   readonly isValid: boolean;
   readonly lastValidatedAt: Date | null;
   readonly expiresAt: Date | null;
+  readonly metadata?: Record<string, unknown> | null;
 }
 
 export interface CheckoutAttempt extends Identifiable, Timestamps {
@@ -537,6 +538,7 @@ export interface PuppeteerConfig {
   readonly headless: boolean;
   readonly timeoutMs: number;
   readonly navigationTimeoutMs: number;
+  readonly executablePath?: string | undefined;
 }
 
 export interface LoggingConfig {

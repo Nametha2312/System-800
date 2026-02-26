@@ -310,11 +310,11 @@ export async function startInProcessPoller(): Promise<void> {
     }
 
     if (timeSinceLastBeat > STALL_THRESHOLD_MS) {
-      logger.error('Poller stall detected — attempting self-recovery', {
+      logger.error({
         timeSinceLastBeatMs: timeSinceLastBeat,
         activeJobs: activeCount,
         stallThresholdMs: STALL_THRESHOLD_MS,
-      });
+      }, 'Poller stall detected — attempting self-recovery');
 
       // Clear all existing jobs and re-schedule from DB
       for (const id of [...activeJobs.keys()]) {
@@ -329,9 +329,9 @@ export async function startInProcessPoller(): Promise<void> {
         lastGlobalHeartbeat = Date.now();
         logger.info('Poller self-recovery complete', { rescheduled: skus.length });
       } catch (recoveryErr) {
-        logger.error('Poller self-recovery failed', {
+        logger.error({
           error: recoveryErr instanceof Error ? recoveryErr.message : String(recoveryErr),
-        });
+        }, 'Poller self-recovery failed');
       }
     } else {
       logger.debug('Poller watchdog OK', {

@@ -68,13 +68,13 @@ class SchedulerImpl implements Scheduler {
 
     // Validate required fields for monitoring
     if (!sku.retailer || !sku.productUrl || !sku.productId) {
-      this.logger.error('SKU missing required fields for scheduling', {
+      this.logger.error({
         skuId,
         hasRetailer: !!sku.retailer,
         hasProductUrl: !!sku.productUrl,
         hasProductId: !!sku.productId,
         retailer: sku.retailer,
-      });
+      }, 'SKU missing required fields for scheduling');
       throw new Error(
         `SKU ${skuId} missing required fields: retailer=${sku.retailer}, productUrl=${sku.productUrl}, productId=${sku.productId}`,
       );

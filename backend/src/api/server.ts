@@ -80,7 +80,7 @@ async function startServer(): Promise<void> {
 
     server.on('error', (error: NodeJS.ErrnoException) => {
       if (error.code === 'EADDRINUSE') {
-        logger.error(`Port ${config.port} is already in use. Run 'npx kill-port ${config.port}' then restart.`, { port: config.port });
+        logger.error({ port: config.port }, `Port ${config.port} is already in use. Run 'npx kill-port ${config.port}' then restart.`);
       } else {
         logger.error('Server error', error);
       }
