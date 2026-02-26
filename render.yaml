@@ -1,0 +1,90 @@
+# Render Blueprint for System-800
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API Service
+  - type: web
+    name: system800-api
+    runtime: node
+    region: oregon
+    plan: standard
+    buildCommand: npm ci && npm run build --workspace=backend
+    startCommand: npm run start --workspace=backend
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: system800-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: system800-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: LOG_LEVEL
+        value: info
+      - key: CORS_ORIGIN
+        value: https://system800.onrender.com
+    autoDeploy: true
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 80
+      targetCPUPercent: 70
+
+  # Frontend Static Site
+  - type: web
+    name: system800-frontend
+    runtime: static
+    buildCommand: npm ci && npm run build --workspace=frontend
+    staticPublishPath: frontend/dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-XSS-Protection
+        value: "1; mode=block"
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://system800-api.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://system800-api.onrender.com
+    autoDeploy: true
+
+  # Redis Service
+  - type: redis
+    name: system800-redis
+    region: oregon
+    plan: standard
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
+databases:
+  # PostgreSQL Database
+  - name: system800-db
+    region: oregon
+    plan: standard
+    databaseName: system800
+    user: system800
+    ipAllowList: []
+    postgresMajorVersion: 16

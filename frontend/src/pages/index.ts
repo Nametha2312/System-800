@@ -1,0 +1,9 @@
+export { DashboardPage } from './DashboardPage';
+export { SKUsPage } from './SKUsPage';
+export { NewSKUPage } from './NewSKUPage';
+export { AlertsPage } from './AlertsPage';
+export { CheckoutsPage } from './CheckoutsPage';
+export { SystemPage } from './SystemPage';
+export { SettingsPage } from './SettingsPage';
+export { LoginPage } from './LoginPage';
+export { RegisterPage } from './RegisterPage';

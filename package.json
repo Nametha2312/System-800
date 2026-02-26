@@ -1,0 +1,32 @@
+{
+  "name": "system-800",
+  "version": "1.0.0",
+  "description": "Production-grade retail monitoring and automation system",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "backend": "npm run --workspace=backend",
+    "frontend": "npm run --workspace=frontend",
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend",
+    "lint:fix": "npm run lint:fix --workspace=backend && npm run lint:fix --workspace=frontend",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "migrate": "npm run migrate --workspace=backend",
+    "migrate:rollback": "npm run migrate:rollback --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
