@@ -9,6 +9,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Receive the API URL at build time so Vite can bake it into the JS bundle
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN apk add --no-cache python3 make g++
 
 COPY package*.json ./
