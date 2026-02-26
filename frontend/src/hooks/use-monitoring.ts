@@ -9,9 +9,12 @@ import { skuKeys } from './use-skus';
 
 let globalSocket: Socket | null = null;
 
+// In production this is the backend Render URL; in local dev Vite proxies /socket.io
+const SOCKET_URL = import.meta.env.VITE_API_URL ?? window.location.origin;
+
 function getSocket(): Socket {
   if (globalSocket === null) {
-    globalSocket = io('/', {
+    globalSocket = io(SOCKET_URL, {
       path: '/socket.io',
       transports: ['websocket', 'polling'],
       autoConnect: false,

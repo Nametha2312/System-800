@@ -1,8 +1,12 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/auth.store';
 
+// In production VITE_API_URL = 'https://system-800-api.onrender.com'
+// In local dev it is unset, so relative '/api/v1' is used (Vite proxy handles it)
+const API_BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/v1';
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -33,10 +37,8 @@ api.interceptors.response.use(
       
       if (refreshToken !== null) {
         try {
-          const response = await axios.post('/api/v1/auth/refresh', {
+          const response = await axios.post(`${API_BASE}/auth/refresh`, {
             refreshToken,
-          }, {
-            baseURL: '/api/v1',
           });
           
           const { accessToken, refreshToken: newRefreshToken } = response.data.data;
